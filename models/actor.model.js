@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
-const ActorSchema =  new Schema({
+const ActorSchema =  mongoose.Schema({
     name: String,
+    publicPassword: String,
     role: String,
     coachId: String,
     directorId: String,

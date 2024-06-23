@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
-const CoachSchema =  new Schema({
+const CoachSchema =  mongoose.Schema({
     name: String,
+    publicPassword: String,
     specialization: {
     type: String,
       specializations: ["dancing", "acting", "singing", "playing"] 

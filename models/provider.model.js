@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 
-const ProviderSchema =  new Schema({
+const ProviderSchema =  mongoose.Schema({
     name: String,
+    publicPassword: String,
     phone: String,
     email: String,
     product: String,
