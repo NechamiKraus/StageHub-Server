@@ -1,14 +1,13 @@
 const mongoose = require('mongoose');
 
-const ActorSchema =  mongoose.Schema({
-    name: String,
-    publicPassword: String,
-    role: String,
-    coachId: String,
-    directorId: String,
-    phone: String,
-    email: String,
+const ActorSchema =  new mongoose.Schema({
+    name:String,
+    role:String,
+    coachId:String,
+    directorId:String,
+    phone:String,
+    email:String,
+    password:String
+})
 
-  })
-
-  module.exports = mongoose.model("Actors",ActorSchema);
+module.exports = mongoose.model("actors",ActorSchema);

@@ -1,41 +1,95 @@
-const express = require('express');
+//express
+const express = require("express") 
+
+//swagger
+const swaggerSetup = require('./swagger');
+
+//.env
 require('dotenv').config()
-const bcrypt = require("bcrypt");
-const bodyParser = require('body-parser');
-const ManagerModel = require('./models/manager.model');
-const userController = require('./controllers/user.controller')
-const managerController = require('./controllers/manager.controller')
-const directorController = require('./controllers/director.controller')
-const connectDB = require('./db/dbconnection');
-connectDB();
+const port = process.env.PORT
 
-// const authentication = require('./middlewares/authentication')
-// const middlewares = [authentication]
+//cors
+const cors = require('cors');
 
-// const addManager = async() =>{
+//app
+const app = express();
+
+swaggerSetup(app);
+//db
+const connectDB = require("./db/dbconnection")
+connectDB()
+
+//controllers
+const userController = require("./controllers/user.controller")
+const managerController = require("./controllers/manager.controller")
+const directorController = require("./controllers/director.controller")
+const coachController = require("./controllers/coach.controller")
+const actorController = require("./controllers/actor.controller")
+const providerController = require("./controllers/provider.controller")
+
+const bodyParser = require("body-parser");
+
+
+///////////////
+
+// const bcrypt = require("bcrypt");
+// const ManagerModel = require("./models/manager.model");
+
+// const addManager = async()=>{
+    
+    
 //     const salt = await bcrypt.genSalt(10);
 //     const hashPassword = await bcrypt.hash("123456", salt);
+    
 //     const firstManager = new ManagerModel({
-//         name: "Nechami Kraus",
-//         phone: "0527614796",
-//         email: "nechami6322@gmail.com",
-//         password: hashPassword
+//         name:"Malky Parasol",
+//         phone:"0548545885",
+//         email:"Malky5885@gmail.com",
+//         password:hashPassword
 //     })
-//     firstManager.save();
+//     return firstManager.save();
 // }
+
+  
+  
+
 // addManager();
-const app = express();
-const port = process.env.PORT;
+/////////////////
+
+// const options = {
+//     swaggerDefinition: {
+//       openapi: '3.0.0',
+//       info: {
+//         title: 'Your API Title',
+//         version: '1.0.0',
+//         description: 'API documentation using Swagger',
+//       },
+//       servers: [
+//         {
+//           url: 'http://localhost:3001', // Replace with your server URL
+//         },
+//       ],
+//     },
+//     apis: ['./controllers/*.js'], // Path to the API routes folder
+//   };
+//   const specs = swaggerJsdoc(options);
+//   app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(specs));
+app.use(cors());
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({ extended: false }));
+
+
 app.use(userController);
 app.use(managerController);
 app.use(directorController);
+app.use(coachController);
+app.use(actorController);
+app.use(providerController);
+// const middlewares = [authentication];
+// app.use(middlewares);
 
-// app.use(middlewares)
 
 app.listen(port, () => {
-    console.log(`listening on http://localhost:${port} `);
+    console.log(`listening on http://localhost:${port}`);
 });
-

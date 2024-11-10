@@ -1,73 +1,164 @@
-const Router = require('express');
-const userService = require('../services/user.service')
+const { Router } = require("express");
+const userService = require("../services/user.service");
+const actorModel = require("../models/actor.model");
+const managerModel = require("../models/manager.model");
+const directorModel = require("../models/director.model");
+const providerModel = require("../models/provider.model");
+const coachModel = require("../models/coach.model");
+
 const router = Router();
 
-//login - connect
-// router.post("/login/actor",async(req,res)=>{
-//     await connectActor(req.body.email,req.body.password,callback);
-//   });
-//   router.post("/login/coach",async(req,res)=>{
-//     await connectUser(req.body.email,req.body.password,res);
-//   });
-//   router.post("/login/director",async(req,res)=>{
-//     await connectUser(req.body.email,req.body.password,res);
-//   });
-//   router.post("/login/provider",async(req,res)=>{
-//     await connectUser(req.body.email,req.body.password,res);
-//   });
-//   router.post("/login/manager",async(req,res)=>{
-//     await connectUser(req.body.email,req.body.password,res);
-//   });
+router.post('/orderticket', async (req , res) => {
+  const {email, name , phone ,amount,showId } = req.body
+  const result = await userService.orderTicket(email, name , phone ,amount,showId);
+  const {statusCode,message} = result;
+  if(!statusCode)
+      res.status(200).send(result);
+  else
+      res.status(statusCode).send(message);
 
+})
 
-// add candidate
-router.post("/join",async (req , res ) => {
-    const {name, phone, email, password ,publicPassword } = req.body;
-    try {
-        await userService.addCandidate(name, phone, email, password, publicPassword);
-        res.status(200).send('Candidate added succsefuly!')
+router.get('/shows', async (req,res) => {
+  const result = await userService.getAllShows()
+  
+  const {statusCode,message} = result;
+    if(!statusCode)
+        res.status(200).send(result);
+    else
+        res.status(statusCode).send(message);
+})
 
-    } catch (error) {
-        res.status(400).send(`failed to add condidate: ${error.message}`);
-    }
-});
-
-// login manager - התחברות
+//V
 router.post("/login/manager", async (req, res) => {
     const { email, password } = req.body;
+  
     try {
-        const result = await userService.connectManager(email, password);
-
-        const { statusCode, message, id, token } = result;
-
-        if (statusCode === 200) {
-            res.header("auth-token", token).status(statusCode).send({ token ,id });
-        } else {
-            res.status(statusCode).json({ message });
-        }
-    } 
-    catch (error) {
-        res.status(400).json({ message: `an error occurred while logging in: ${error.message}` });
+      const result = await userService.connectUser(managerModel,"manager",email,password);
+  
+      const { statusCode, message, id, token } = result;
+  
+      if (statusCode === 200) {
+        res.header("auth-token", token).status(statusCode).send({ token, id });
+      } else {
+        res.status(statusCode).json({ message });
+      }
+    } catch (error) {
+      res
+        .status(400)
+        .json({
+          message: `an error occurred while logging in: ${error.message}`,
+        });
     }
+  });
+//V
+router.post("/login/director", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const result = await userService.connectUser(directorModel,"director",email,password);
+
+    const { statusCode, message, id, token } = result;
+
+    if (statusCode === 200) {
+      res.header("auth-token", token).status(statusCode).send({ token, id });
+    } else {
+      res.status(statusCode).json({ message });
+    }
+  } catch (error) {
+    res
+      .status(400)
+      .json({
+        message: `an error occurred while logging in: ${error.message}`,
+      });
+  }
+});
+//V
+router.post("/login/actor", async (req, res) => {
+  const { email, password } = req.body;
+  try {
+    const result = await userService.connectUser(
+      actorModel,
+      "actor",
+      email,
+      password
+    );
+    const { statusCode, message, id, token } = result;
+    if (statusCode === 200) {
+      res.header("auth-token", token).status(statusCode).send({ token, id });
+    } else {
+      res.status(statusCode).json({ message });
+    }
+  } catch (error) {
+    res
+      .status(400)
+      .json({
+        message: `An error occurred while logging in: ${error.message}`,
+      });
+  }
+});
+//V
+router.post("/join", async (req, res) => {
+  const { name, phone, email, password, publicPassword } = req.body;
+  try {
+    await userService.addCondidate(
+      name,
+      phone,
+      email,
+      password,
+      publicPassword
+    );
+    res.status(200).send("condidate added successfully");
+  } catch (error) {
+    res.status(400).send(`failed to add condidate: ${error.message}`);
+  }
+});
+//V
+router.post("/login/coach",async(req,res)=>{
+  const { email, password } = req.body;
+  try {
+    const result = await userService.connectUser(
+      coachModel,
+      "coach",
+      email,
+      password
+    );
+    const { statusCode, message, id, token } = result;
+    if (statusCode === 200) {
+      res.header("auth-token", token).status(statusCode).send({ token, id });
+    } else {
+      res.status(statusCode).json({ message });
+    }
+  } catch (error) {
+    res
+      .status(400)
+      .json({
+        message: `An error occurred while logging in: ${error.message}`,
+      });
+  }
 });
 
-// login director - התחברות
-router.post("/login/director", async (req,res)=>{
-    const {email , password } = req.body;
-    try {
-        const result = await userService.connectDirector(email, password);
-
-        const { statusCode, message, id, token } = result;
-
-        if (statusCode === 200) {
-            res.header("auth-token", token).status(statusCode).send({ token ,id });
-        } else {
-            res.status(statusCode).json({ message });
-        }
-    } 
-    catch (error) {
-        res.status(400).json({ message: `an error occurred while logging in: ${error.message}` });
+router.post("/login/provider",async(req,res)=>{
+  const { email, password } = req.body;
+  try {
+    const result = await userService.connectUser(
+      providerModel,
+      "provider",
+      email,
+      password
+    );
+    const { statusCode, message, id, token } = result;
+    if (statusCode === 200) {
+      res.header("auth-token", token).status(statusCode).send({ token, id });
+    } else {
+      res.status(statusCode).json({ message });
     }
+  } catch (error) {
+    res
+      .status(400)
+      .json({
+        message: `An error occurred while logging in: ${error.message}`,
+      });
+  }
 });
 
 module.exports = router;
