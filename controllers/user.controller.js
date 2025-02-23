@@ -30,9 +30,12 @@ router.get('/shows', async (req,res) => {
 })
 
 //V
+
 router.post("/login/manager", async (req, res) => {
     const { email, password } = req.body;
-  
+  console.log("email" ,email);
+  console.log("password", password);
+
     try {
       const result = await userService.connectUser(managerModel,"manager",email,password);
   
