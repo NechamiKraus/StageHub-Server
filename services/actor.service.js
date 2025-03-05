@@ -15,8 +15,8 @@ const getAllPractices = async(actorId) =>{
 
 const getDetails = async (id) =>{
     try{
-        const {name, phone , role, coachId, directorId} = await actorModel.findById( new mongoose.Types.ObjectId(id), 'name phone role coachId directorId');
-        return { statusCode: 200, message: {name, phone, role, coachId, directorId} }
+        const {name, phone ,email, role, coachId, directorId} = await actorModel.findById( new mongoose.Types.ObjectId(id), 'name phone email role coachId directorId');
+        return { statusCode: 200, message: {name, phone ,email, role, coachId, directorId} }
     }
     catch(error){
         return { statusCode: 400, message: `Failed to get actor details: ${error.message}` };
