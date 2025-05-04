@@ -5,7 +5,9 @@ const DirectorSchema =  new mongoose.Schema({
     phone:String,
     email:String,
     password:String,
-    publicPassword:String
+    publicPassword:String,
+    uploadedFile: String, // <== Add this line
+
 })
 
 module.exports = mongoose.model("directors",DirectorSchema);
