@@ -118,5 +118,14 @@ router.get("/director/details/:id",checkAuth("director"),async (req,res)=>{
         res.status(statusCode).send(message);
    })
 
+   router.get('/director/actors' , checkAuth("director"), async(req,res) => {
+    const result= await directorService.getAllActors();
+    const {statusCode,message} = result;
+    if(!statusCode)
+        res.status(200).send(result);
+    else
+        res.status(statusCode).send(message);
+})
+
 
 module.exports = router;
