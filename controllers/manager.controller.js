@@ -13,10 +13,7 @@ router.post("/signUp/director/",checkAuth("manager"), async (req, res) => {
     else
         res.status(statusCode).send(message);
 });
-//V
-router.get("/hello",checkAuth("manager"),(req,res)=>{
- res.status(200).send("hello manager");
-})
+
 
 router.get("/manager/details/:id",checkAuth("manager"),async (req,res)=>{
 
